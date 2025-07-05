@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Knife-Hit-Game-main.sln"
+    "dotnet.defaultSolution": "AI Hitman.sln"
 }

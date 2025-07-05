@@ -6,9 +6,12 @@ using UnityEngine.SceneManagement;
 public class KnifeController : MonoBehaviour
 {
     private KnifeManager knifeManager;
-   private Rigidbody2D kniferb;
-   [SerializeField] private float movespeed;
-   private bool CanShoot;
+    private Rigidbody2D kniferb;
+    [SerializeField] private float movespeed;
+    private bool CanShoot;
+
+    [SerializeField] private string gameSceneName = "GameScene";   // NEW - drag the scene name in Inspector
+    [SerializeField] private float loadDelay = 0.5f;
 
     void Start()
     {
@@ -27,38 +30,49 @@ public class KnifeController : MonoBehaviour
 
     private void HandleShoot()
     {
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
-           CanShoot = true;
-           knifeManager.SetDisableKnifeIconColor();
+            CanShoot = true;
+            knifeManager.SetDisableKnifeIconColor();
         }
-            }
+    }
 
-    void OnCollisionEnter2D(Collision2D other)
+    private void OnCollisionEnter2D(Collision2D other)
     {
-        if(other.gameObject.CompareTag("Circle"))
+        if (other.gameObject.CompareTag("Circle"))
         {
+            // ---------- EXISTING SUCCESS LOGIC ----------
             knifeManager.SetActiveKnife();
             CanShoot = false;
             kniferb.isKinematic = true;
             kniferb.constraints = RigidbodyConstraints2D.FreezeAll;
-            transform.SetParent(other.gameObject.transform);
+            transform.SetParent(other.transform);
+
+            // ---------- NEW  : load the gameplay scene ----------
         }
 
-        if(other.gameObject.CompareTag("Knife"))
+        if (other.gameObject.CompareTag("Knife"))
         {
-            SceneManager.LoadScene("MainScene");
+            StartCoroutine(LoadSceneAfterDelay(gameSceneName, loadDelay));
+            // SceneManager.LoadScene("MainScene");   // keep your failure reload
         }
+    }
+
+    private IEnumerator LoadSceneAfterDelay(string sceneName, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
+        //  - change to LoadSceneMode.Additive if you intend to stack scenes
     }
 
     private void Shoot()
     {
-         if(CanShoot)
-         {
-           kniferb.AddForce(Vector2.up * movespeed * Time.fixedDeltaTime);
-         }
-{
-}
+        if (CanShoot)
+        {
+            kniferb.AddForce(Vector2.up * movespeed * Time.fixedDeltaTime);
+        }
+        {
+        }
     }
 
     private void GetComponents()

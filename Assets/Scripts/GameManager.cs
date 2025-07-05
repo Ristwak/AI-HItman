@@ -5,14 +5,22 @@ using UnityEngine.UI;
 public class GameController : MonoBehaviour
 {
     public Button startButton; // Butonu Inspector'dan bağlayacağız
+    public Button exitButton;
 
     void Start()
     {
         startButton.onClick.AddListener(LoadGameScene);
+        exitButton.onClick.AddListener(OnExitYes);
     }
 
     void LoadGameScene()
     {
         SceneManager.LoadScene("MainScene"); // GameScene'e geçiş yap
+    }
+
+    public void OnExitYes()
+    {
+        Application.Quit();
+        Debug.Log("Game closed.");
     }
 }
