@@ -218,26 +218,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1256333681}
-    - target: {fileID: 404562860906048408, guid: fd4b3f579173b4b4081895403ab47d4d, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnExitYes
-      objectReference: {fileID: 0}
-    - target: {fileID: 404562860906048408, guid: fd4b3f579173b4b4081895403ab47d4d, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: MainGameManager, Assembly-CSharp
-      objectReference: {fileID: 0}
     - target: {fileID: 2485795851439710822, guid: fd4b3f579173b4b4081895403ab47d4d, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1256333681}
-    - target: {fileID: 2485795851439710822, guid: fd4b3f579173b4b4081895403ab47d4d, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnExitNo
-      objectReference: {fileID: 0}
-    - target: {fileID: 2485795851439710822, guid: fd4b3f579173b4b4081895403ab47d4d, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: MainGameManager, Assembly-CSharp
-      objectReference: {fileID: 0}
     - target: {fileID: 3685149275539627385, guid: fd4b3f579173b4b4081895403ab47d4d, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -328,35 +312,35 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7659903138655536628, guid: fd4b3f579173b4b4081895403ab47d4d, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7659903138655536628, guid: fd4b3f579173b4b4081895403ab47d4d, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7659903138655536628, guid: fd4b3f579173b4b4081895403ab47d4d, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 236.5475
       objectReference: {fileID: 0}
     - target: {fileID: 7659903138655536628, guid: fd4b3f579173b4b4081895403ab47d4d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -173.63495
       objectReference: {fileID: 0}
     - target: {fileID: 8581803878012515770, guid: fd4b3f579173b4b4081895403ab47d4d, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8581803878012515770, guid: fd4b3f579173b4b4081895403ab47d4d, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8581803878012515770, guid: fd4b3f579173b4b4081895403ab47d4d, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 709.6425
       objectReference: {fileID: 0}
     - target: {fileID: 8581803878012515770, guid: fd4b3f579173b4b4081895403ab47d4d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -173.63495
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1117,10 +1101,10 @@ MonoBehaviour:
   knifeIconList: []
   knifePrefab: {fileID: 490337733267405575, guid: c5069e74220539a4ba69402e2ed61953, type: 3}
   knifeIconPrefab: {fileID: 4422423225644329200, guid: 7f2f0840ea1526044ab1180dc86cb9f2, type: 3}
-  knifeIconPosition: {x: -2.3, y: -4}
+  knifeIconPosition: {x: -2, y: -4}
   knifeCount: 10
   activeColor: {r: 0.6745283, g: 0.99387765, b: 1, a: 1}
-  disableColor: {r: 0.12646851, g: 0.13207549, b: 0.13207549, a: 1}
+  disableColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!4 &1804193734
 Transform:
   m_ObjectHideFlags: 0

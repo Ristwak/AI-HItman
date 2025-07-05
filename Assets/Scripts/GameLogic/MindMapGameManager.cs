@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 using TMPro;
 using UnityEngine.SceneManagement;
 
@@ -24,14 +25,18 @@ public class ReverseBotQuestionList
 public class MindMapGameManager : MonoBehaviour
 {
     [Header("Settings")]
+    [Tooltip("JSON file placed under StreamingAssets")]
     public string jsonFileName = "MindMapAI.json";
+    [Tooltip("Seconds per question")]
     public float questionTime = 10f;
+    [Tooltip("Maximum questions per session before returning to MainScene")]
+    public int maxQuestions = 5;
 
     [Header("UI References")]
     public TMP_Text outputText;
-    public TMP_Text[] optionTexts;    // Size = 3
-    public Button[] optionButtons;    // Size = 3
-    public TMP_Text timerText;
+    public TMP_Text[] optionTexts;    // e.g. size = 3
+    public Button[]  optionButtons;  // e.g. size = 3
+    public TMP_Text  timerText;
 
     [Header("Button Colors")]
     public Color defaultColor = Color.white;
@@ -52,14 +57,32 @@ public class MindMapGameManager : MonoBehaviour
 
     private IEnumerator LoadQuestions()
     {
-        string path = Path.Combine(Application.streamingAssetsPath, jsonFileName);
-        if (!File.Exists(path))
+        string filePath = Path.Combine(Application.streamingAssetsPath, jsonFileName);
+        string json = string.Empty;
+
+    #if UNITY_ANDROID && !UNITY_EDITOR
+        // On Android the StreamingAssets folder is inside the .apk
+        using (UnityWebRequest www = UnityWebRequest.Get(filePath))
         {
-            Debug.LogError("JSON not found: " + path);
+            yield return www.SendWebRequest();
+            if (www.result == UnityWebRequest.Result.ConnectionError ||
+                www.result == UnityWebRequest.Result.ProtocolError)
+            {
+                Debug.LogError("Failed to load JSON on Android: " + www.error);
+                yield break;
+            }
+            json = www.downloadHandler.text;
+        }
+    #else
+        if (!File.Exists(filePath))
+        {
+            Debug.LogError("JSON not found: " + filePath);
             yield break;
         }
+        json = File.ReadAllText(filePath);
+    #endif
 
-        string json = File.ReadAllText(path);
+        // Parse JSON
         try
         {
             var data = JsonUtility.FromJson<ReverseBotQuestionList>(json);
@@ -72,13 +95,14 @@ public class MindMapGameManager : MonoBehaviour
             yield break;
         }
 
+        // If no questions, go back
         if (allQuestions == null || allQuestions.Count == 0)
         {
             SceneManager.LoadScene("MainScene");
             yield break;
         }
 
-        ShuffleQuestions();      // ←— randomize order each run
+        ShuffleQuestions();
         SetupNextRound();
     }
 
@@ -88,17 +112,19 @@ public class MindMapGameManager : MonoBehaviour
         for (int i = 0; i < allQuestions.Count - 1; i++)
         {
             int rnd = UnityEngine.Random.Range(i, allQuestions.Count);
-            var temp = allQuestions[i];
+            var tmp = allQuestions[i];
             allQuestions[i] = allQuestions[rnd];
-            allQuestions[rnd] = temp;
+            allQuestions[rnd] = tmp;
         }
     }
 
     private void SetupNextRound()
     {
-        if (currentQuestionIndex >= allQuestions.Count)
+        // If we've shown all or hit the maxQuestions cap, return to MainScene
+        if (currentQuestionIndex >= allQuestions.Count ||
+            currentQuestionIndex >= maxQuestions)
         {
-            EndGame();
+            SceneManager.LoadScene("MainScene");
             return;
         }
 
@@ -108,29 +134,42 @@ public class MindMapGameManager : MonoBehaviour
         var q            = allQuestions[currentQuestionIndex];
         outputText.text  = q.output;
 
+        // Reset buttons
         for (int i = 0; i < optionButtons.Length; i++)
         {
+            // Reset color
             var img = optionButtons[i].GetComponent<Image>();
             if (img != null) img.color = defaultColor;
 
+            // Set text
             optionTexts[i].text = q.options[i];
 
+            // Wire click
             int index = i;
             optionButtons[i].interactable = true;
             optionButtons[i].onClick.RemoveAllListeners();
             optionButtons[i].onClick.AddListener(() => OnOptionSelected(index));
         }
 
+        // Start timer coroutine
         countdownCoroutine = StartCoroutine(CountdownAndSubmit());
     }
 
     private void OnOptionSelected(int index)
     {
         if (!inputAllowed) return;
+
         inputAllowed    = false;
         selectedOption  = index;
-        foreach (var btn in optionButtons) btn.interactable = false;
-        if (countdownCoroutine != null) StopCoroutine(countdownCoroutine);
+
+        // Disable all buttons
+        foreach (var btn in optionButtons)
+            btn.interactable = false;
+
+        // Stop timer
+        if (countdownCoroutine != null)
+            StopCoroutine(countdownCoroutine);
+
         StartCoroutine(DelayedSubmit());
     }
 
@@ -147,6 +186,7 @@ public class MindMapGameManager : MonoBehaviour
 
     private IEnumerator DelayedSubmit()
     {
+        // Small pause so user sees button color change
         yield return new WaitForSeconds(0.5f);
         SubmitAnswer();
     }
@@ -154,23 +194,20 @@ public class MindMapGameManager : MonoBehaviour
     private void SubmitAnswer()
     {
         var q = allQuestions[currentQuestionIndex];
+
+        // Color the correct one green and the selected wrong one red
         for (int i = 0; i < optionButtons.Length; i++)
         {
             var img = optionButtons[i].GetComponent<Image>();
             if (img == null) continue;
-            if (i == q.correctIndex)       img.color = correctColor;
-            else if (i == selectedOption)  img.color = wrongColor;
+
+            if (i == q.correctIndex)
+                img.color = correctColor;
+            else if (i == selectedOption)
+                img.color = wrongColor;
         }
 
         currentQuestionIndex++;
         Invoke(nameof(SetupNextRound), 1.5f);
-    }
-
-    private void EndGame()
-    {
-        outputText.text = "खेल समाप्त!";
-        timerText.text  = "";
-        foreach (var btn in optionButtons)
-            btn.gameObject.SetActive(false);
     }
 }

@@ -1513,6 +1513,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jsonFileName: MindMapAI.json
   questionTime: 10
+  maxQuestions: 5
   outputText: {fileID: 1425879989}
   optionTexts:
   - {fileID: 1376913645}
