@@ -1,17 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MainGameManager : MonoBehaviour
 {
-    public GameObject gamePanel;
+    // public GameObject gamePanel;
     public GameObject comingSoonPanel;
     public GameObject exitPanel;
     private bool isComingSoonActive = false;
 
     void Start()
     {
-        gamePanel.SetActive(true);
+        // gamePanel.SetActive(true);
         comingSoonPanel.SetActive(false);
         exitPanel.SetActive(false);
         isComingSoonActive = false;
@@ -38,15 +39,17 @@ public class MainGameManager : MonoBehaviour
 
     public void OnExitYes()
     {
+        SoundManager.Instance.PlaySound("Click");
         Application.Quit();
         Debug.Log("Game closed.");
     }
 
     public void OnExitNo()
     {
+        SoundManager.Instance.PlaySound("Click");
         exitPanel.SetActive(false);
         if(isComingSoonActive)
-            comingSoonPanel.SetActive(true);
+            SceneManager.LoadScene("StartScene");
         else
             comingSoonPanel.SetActive(false);
         Time.timeScale = 1f; // Resume game if exit panel is closed

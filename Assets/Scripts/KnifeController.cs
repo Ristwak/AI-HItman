@@ -32,6 +32,7 @@ public class KnifeController : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
+            SoundManager.Instance.PlaySound("Shoot");
             CanShoot = true;
             knifeManager.SetDisableKnifeIconColor();
         }
@@ -70,8 +71,6 @@ public class KnifeController : MonoBehaviour
         if (CanShoot)
         {
             kniferb.AddForce(Vector2.up * movespeed * Time.fixedDeltaTime);
-        }
-        {
         }
     }
 

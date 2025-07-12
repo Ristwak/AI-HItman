@@ -157,6 +157,7 @@ public class MindMapGameManager : MonoBehaviour
 
     private void OnOptionSelected(int index)
     {
+        SoundManager.Instance.PlaySound("Click");
         if (!inputAllowed) return;
 
         inputAllowed    = false;
@@ -202,9 +203,15 @@ public class MindMapGameManager : MonoBehaviour
             if (img == null) continue;
 
             if (i == q.correctIndex)
+            {
                 img.color = correctColor;
+                SoundManager.Instance.PlaySound("correct");
+            }
             else if (i == selectedOption)
+            {
                 img.color = wrongColor;
+                SoundManager.Instance.PlaySound("incorrect");
+            }
         }
 
         currentQuestionIndex++;

@@ -15,11 +15,13 @@ public class GameController : MonoBehaviour
 
     void LoadGameScene()
     {
+        SoundManager.Instance.PlaySound("Click");
         SceneManager.LoadScene("MainScene"); // GameScene'e geçiş yap
     }
 
     public void OnExitYes()
     {
+        SoundManager.Instance.PlaySound("Click");
         Application.Quit();
         Debug.Log("Game closed.");
     }
